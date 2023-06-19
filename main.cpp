@@ -1,7 +1,8 @@
 #include <pybind11/pybind11.h>
+#include "add.cpp"
 
-int addNumbers(int a, int b);
+namespace py = pybind11;
 
 PYBIND11_MODULE(example, m) {
-    m.def("add_numbers", &addNumbers, "Add two numbers");
+    m.def("drawBox", &drawBox, "Draw a box using Box2D");
 }
