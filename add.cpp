@@ -8,11 +8,11 @@ class Floor {
 public:
     Floor(b2World& world, float y) {
         b2BodyDef groundBodyDef;
-        groundBodyDef.position.Set(40.0f, y);  // Adjusted position
+        groundBodyDef.position.Set(20.0f, y);  // Adjusted position
         groundBody = world.CreateBody(&groundBodyDef);
 
         b2PolygonShape groundBox;
-        groundBox.SetAsBox(40.0f, 1.0f);  
+        groundBox.SetAsBox(20.0f, 1.0f);  
 
         b2FixtureDef groundFixtureDef;
         groundFixtureDef.shape = &groundBox;
@@ -31,7 +31,7 @@ class Shape {
 public:
     Shape(b2World& world) {
         const float shapeX = 20.0f;  
-        const float shapeY = 20.0f;  // Adjusted position
+        const float shapeY = 40.0f;  // Adjusted position
 
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody;
@@ -39,7 +39,7 @@ public:
         box = world.CreateBody(&bodyDef);
 
         int numSides = std::rand() % 5 + 4; // Random number of sides between 4 and 8
-        float distance = 20.0f * std::sin(b2_pi / numSides);  // Increased size
+        float distance = 2.0f * std::sin(b2_pi / numSides);  // Increased size
         vertices.reserve(numSides);
         for (int i = 0; i < numSides; i++) {
             float x = distance * std::cos(2 * b2_pi / numSides * i);
@@ -54,7 +54,6 @@ public:
         boxFixture.friction = 0.3f;
         box->CreateFixture(&boxFixture);
     }
-
 
     b2Body* GetBoxBody() {
         return box;
@@ -86,10 +85,10 @@ void drawBox() {
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 800;
 
-    b2Vec2 gravity(0.0f, -9.8f); 
+    b2Vec2 gravity(0.0f, -9.8f);  // Increased gravity
     b2World world(gravity);
 
-    Floor floor(world, SCREEN_HEIGHT / (2.0f * 20.0f)); // Halfway down the screen
+    Floor floor(world, 1.0f); // Halfway down the screen
 
     Shape shape(world);
 
@@ -111,7 +110,10 @@ void drawBox() {
         float32 timeStep = 1.0f / 60.0f; 
         int32 velocityIterations = 6;
         int32 positionIterations = 2;
+        
         world.Step(timeStep, velocityIterations, positionIterations);
+        b2Vec2 position = shape.GetBoxBody()->GetPosition();
+        std::cout << "Shape position: (" << position.x << ", " << position.y << ")\n";
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
